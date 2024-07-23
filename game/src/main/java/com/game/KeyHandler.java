@@ -28,6 +28,10 @@ public class KeyHandler implements KeyListener {
         //right
         direction = 3;
        }
+
+       if(kc == KeyEvent.VK_ENTER){
+        direction = 5; 
+       }
     }
 
     @Override

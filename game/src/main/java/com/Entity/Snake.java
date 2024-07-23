@@ -4,44 +4,44 @@ import java.util.ArrayList;
 
 public class Snake {
 
-    public ArrayList<Integer> directions;
     public ArrayList<int[]> tailPositions;
     public int[] position, prevPosition; //headPos
     int tail, size;
 
 
     public Snake(int x, int y, int s){
-        directions = new ArrayList<Integer>();
         tailPositions = new ArrayList<int[]>();
         position = new int[]{x,y};
+        tailPositions.add(new int[]{x,y});
         prevPosition  = new int[2];
         size = s;
         tail = 0;
     }
 
+
     public void addTail(){
-        tailPositions.add(prevPosition);
+        tailPositions.add(tailPositions.get(tailPositions.size()-1).clone());
     }
 
-    public boolean setPosition(int[] p){
+    public boolean setPosition(int x, int y){
 
-        prevPosition = position.clone();
-        position = p.clone();
+        //Create position to check collisions for
+        int[] checkPos = tailPositions.get(0).clone();
+        checkPos[0] += x;
+        checkPos[1] += y;
 
+        //Update tail starting from the end        
         for(int i = tailPositions.size()-1; i > 0; i--){
             int[] pos = tailPositions.get(i-1);
-            tailPositions.set(i, pos);
-            if(pos[0] == position[0] && pos[1] == position[1]){
+            tailPositions.set(i, pos.clone());
+            if(pos[0] == checkPos[0] && pos[1] == checkPos[1]){
                 return true;
             }
         }
         
-        if(tailPositions.size()>0){
-            tailPositions.set(0, prevPosition);
-            if(prevPosition[0] == position[0] && prevPosition[1] == position[1]){
-                return true;
-            }
-        }
+        //Then update head
+        tailPositions.get(0)[0] += x;
+        tailPositions.get(0)[1] += y;
 
         return false;
     }
@@ -54,5 +54,5 @@ public class Snake {
         return false;
     }
 
-    public int[] getPosition(){return position;}
+    public int[] getPosition(){return tailPositions.get(0);}
 }
